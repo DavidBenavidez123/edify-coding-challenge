@@ -6,6 +6,7 @@ import SearchFilter from './SearchFilter'
 import PostFavoriteBreadCrumb from './PostFavoriteBreadCrumb'
 import { Loader } from 'semantic-ui-react'
 import { ToastContainer, toast } from 'react-toastify';
+import { filterPosts } from './util/filter'
 
 function App() {
 
@@ -124,9 +125,6 @@ function App() {
       setLoading(false)
       setPosts(immutablePosts)
     }, delay);
-
-
-
   }
 
   const toggleFavorites = () => {
@@ -137,7 +135,6 @@ function App() {
       setPosts(favorites)
       setLoading(false)
     }, delay);
-
   }
 
   const tagFuzzySearch = (tag) => {
@@ -151,38 +148,22 @@ function App() {
     }
     else {
       if (postsFavToggle === false) {
-        setPosts(immutablePosts.filter(post => {
-          for (let i = 0; i < post.tags.length; i++) {
-            if (post.tags[i].slice(0, tag.length) === tag) {
-              return true
-            }
-          }
-        })
-        )
+        setPosts(filterPosts(immutablePosts, tag))
       }
       else {
-        setPosts(immutableFavorites.filter(post => {
-          for (let i = 0; i < post.tags.length; i++) {
-            if (post.tags[i].slice(0, tag.length) === tag) {
-              return true
-            }
-          }
-        })
-        )
+        setPosts(filterPosts(immutableFavorites, tag))
       }
 
     }
   }
-  
+
 
   return (
     <div className="App">
       <ToastContainer />
       <div className='Nav-Bar'>
         <SearchFilter clickedTag={clickedTag} tagFuzzySearch={tagFuzzySearch} />
-
         Enter delay in ms<input name='delay' value={delay} onChange={(e) => setDelay(e.target.value)} />
-        
         <PostFavoriteBreadCrumb togglePosts={togglePosts} toggleFavorites={toggleFavorites} postsFavToggle={postsFavToggle} />
       </div>
       {loading ? (

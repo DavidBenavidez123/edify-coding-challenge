@@ -7,9 +7,7 @@ function CommentsModal(props) {
 
     const [comments, setComments] = useState([])
     const [loadingComments, setLoadingComments] = useState(false)
-
-
-
+    
     useEffect(() => {
         setLoadingComments(true)
         setTimeout(() => {
