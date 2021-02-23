@@ -2,10 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react'
 
 function SearchFilter(props) {
-
     const [text, setText] = useState('')
-
-
     useEffect(() => {
         setText(props.clickedTag)
     }, [props.clickedTag])

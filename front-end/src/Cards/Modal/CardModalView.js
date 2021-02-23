@@ -1,39 +1,10 @@
 import React from 'react';
 import { Button, Header, Image, Comment, Modal, Placeholder, Feed } from 'semantic-ui-react'
 import Moment from 'react-moment';
-import { useState, useEffect } from 'react'
-import axios from 'axios'
-function CommentsModal(props) {
 
-    const [comments, setComments] = useState([])
-    const [loadingComments, setLoadingComments] = useState(false)
-    
-    useEffect(() => {
-        setLoadingComments(true)
-        setTimeout(() => {
-            loadComments()
-        }, props.delay);
-
-
-    }, [props.delay])
-
-    const loadComments = async () => {
-        try {
-            const comments = await axios.get(`https://dummyapi.io/data/api/post/${post.id}/comment?limit=10`, { headers: { 'app-id': '603056a05a55834b443b1b15' } })
-            setComments(comments.data.data)
-            setLoadingComments(false)
-        }
-        catch (err) {
-            notifyError('Error loading comments')
-        }
-    }
-
-
-
-    const { post, notifyError } = props
-    console.log({ post })
+function CardModalComments(props) {
+    const { post, comments, loadingComments } = props
     return (
-
         <Modal
             open={props.open}
         >
@@ -44,7 +15,7 @@ function CommentsModal(props) {
             </Modal.Header>
             <Modal.Content image>
 
-                <Image size='medium' src={props.image} wrapped />
+                <Image size='medium' src={post.image} wrapped />
                 <Modal.Description>
                     <Header>Comments</Header>
                     {
@@ -84,7 +55,6 @@ function CommentsModal(props) {
                                 </Comment.Group>
                             )
                     }
-
                 </Modal.Description>
             </Modal.Content>
             <Modal.Description className='Modal-Post-Tags' >
@@ -108,8 +78,7 @@ function CommentsModal(props) {
                 />
             </Modal.Actions>
         </Modal>
-
     );
 }
 
-export default CommentsModal;
+export default CardModalComments;

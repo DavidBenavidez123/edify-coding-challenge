@@ -1,12 +1,11 @@
 import './App.css';
-import axios from 'axios'
 import { useEffect, useState } from 'react'
-import Cards from './Cards'
-import SearchFilter from './SearchFilter'
-import PostFavoriteBreadCrumb from './PostFavoriteBreadCrumb'
+import Cards from './Cards/Cards'
 import { Loader } from 'semantic-ui-react'
 import { ToastContainer, toast } from 'react-toastify';
 import { filterPosts } from './util/filter'
+import Header from './Header/Header'
+import { fetchPosts } from './Api/PostApi'
 
 function App() {
 
@@ -18,7 +17,6 @@ function App() {
   const [postsFavToggle, setPostsFavToggle] = useState(false)
   const [delay, setDelay] = useState(0)
   const [loading, setLoading] = useState(true)
-  const [delayFlag, setDelayFlag] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -40,7 +38,7 @@ function App() {
         if (!favoriteLocalStorage.hasOwnProperty(favorite.id)) {
           favoriteLocalStorage[favorite.id] = favorite
           localStorage.setItem('favorites', JSON.stringify(favoriteLocalStorage))
-          console.log('added')
+          loadFavorites()
           notifySuccess('Added to favorites!')
         }
         else {
@@ -48,7 +46,6 @@ function App() {
         }
       }
     }, delay);
-    loadFavorites()
   }
 
 
@@ -78,16 +75,13 @@ function App() {
   const loadFavorites = () => {
     let favoriteLocalStorage = JSON.parse(localStorage.getItem('favorites'))
     if (favoriteLocalStorage !== null) {
-
       let favoriteArray = Object.values(favoriteLocalStorage)
       setImmutableFavorites(favoriteArray)
       setFavorites(favoriteArray)
     }
-
   }
 
   const removeFavorite = (id) => {
-
     setTimeout(() => {
       let favoriteLocalStorage = JSON.parse(localStorage.getItem('favorites'))
       if (favoriteLocalStorage !== null) {
@@ -104,7 +98,7 @@ function App() {
 
   const loadData = async () => {
     try {
-      const data = await axios.get('https://dummyapi.io/data/api/post?limit=20', { headers: { 'app-id': '603056a05a55834b443b1b15' } })
+      const data = await fetchPosts()
       setPosts(data.data.data)
       setimmutablePosts(data.data.data)
       setLoading(false)
@@ -157,37 +151,37 @@ function App() {
     }
   }
 
+  const simulatedDelay = (delay) => {
+    setDelay(delay)
+  }
+
 
   return (
     <div className="App">
       <ToastContainer />
-      <div className='Nav-Bar'>
-        <SearchFilter clickedTag={clickedTag} tagFuzzySearch={tagFuzzySearch} />
-        Enter delay in ms<input name='delay' value={delay} onChange={(e) => setDelay(e.target.value)} />
-        <PostFavoriteBreadCrumb togglePosts={togglePosts} toggleFavorites={toggleFavorites} postsFavToggle={postsFavToggle} />
-      </div>
+      <Header
+        clickedTag={clickedTag}
+        tagFuzzySearch={tagFuzzySearch}
+        togglePosts={togglePosts}
+        toggleFavorites={toggleFavorites}
+        postsFavToggle={postsFavToggle}
+        simulatedDelay={simulatedDelay}
+      />
       {loading ? (
         <Loader active>Loading</Loader>
-
       ) : (
-          <div className='Posts'>
-            {posts.map(post =>
-              <Cards
-                notifySuccess={notifySuccess}
-                delay={delay}
-                removeFavorite={removeFavorite}
-                postsFavToggle={postsFavToggle}
-                loadFavorites={loadFavorites}
-                addToFavorites={addToFavorites}
-                tagFuzzySearch={tagFuzzySearch}
-                handleChangeTag={handleChangeTag}
-                key={post.id}
-                post={post}
-              />
-
-            )}
-          </div>
-
+          <Cards
+            notifySuccess={notifySuccess}
+            delay={delay}
+            removeFavorite={removeFavorite}
+            postsFavToggle={postsFavToggle}
+            loadFavorites={loadFavorites}
+            addToFavorites={addToFavorites}
+            tagFuzzySearch={tagFuzzySearch}
+            handleChangeTag={handleChangeTag}
+            notifyError={notifyError}
+            posts={posts}
+          />
         )
 
       }
