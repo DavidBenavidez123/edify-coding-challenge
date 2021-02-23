@@ -14,12 +14,9 @@ function DelayInput(props) {
     }, [toggleFlag])
 
     const handleInput = (e) => {
-
         setToggleFlag(e.target.checked)
-
     }
 
-    console.log(toggleFlag)
     return (
         <div style={{ display: 'flex', alignItems: 'center' }}>
             <p style={{ display: 'inline-block', margin: '0px', marginRight: '10px' }}>
