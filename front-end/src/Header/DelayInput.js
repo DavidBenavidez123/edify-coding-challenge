@@ -1,18 +1,37 @@
 import React from 'react';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Toggle from 'react-toggle'
+
 function DelayInput(props) {
 
-    const [input, setInput] = useState(0)
+
+
+    const [toggleFlag, setToggleFlag] = useState(false)
     const { simulatedDelay } = props
 
+    useEffect(() => {
+        toggleFlag ? simulatedDelay(2000) : simulatedDelay(0)
+    }, [toggleFlag])
+
     const handleInput = (e) => {
-        setInput(e.target.value)
-        simulatedDelay(e.target.value)
+
+        setToggleFlag(e.target.checked)
+
     }
 
+    console.log(toggleFlag)
     return (
-        <div>
-            Enter delay in ms<input name='delay' value={input} onChange={(e) => handleInput(e)} />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            <p style={{ display: 'inline-block', margin: '0px', marginRight: '10px' }}>
+                2 second network delay
+            </p>
+            <Toggle
+                defaultChecked={toggleFlag}
+                name='milkIsReady'
+                value={toggleFlag}
+                onChange={handleInput}
+            />
+
         </div>
     );
 }
