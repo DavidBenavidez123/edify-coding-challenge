@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react'
 import CardModalView from './CardModalView';
-import {fetchComments} from '../../Api/PostApi'
+import { fetchComments } from '../../Api/PostApi'
 function CommentsModal(props) {
 
     const [comments, setComments] = useState([])
@@ -11,16 +11,12 @@ function CommentsModal(props) {
 
     useEffect(() => {
         setLoadingComments(true)
-        setTimeout(() => {
-            loadComments()
-        }, delay);
-
-
+        loadComments()
     }, [delay])
 
     const loadComments = async () => {
         try {
-            const comments = await fetchComments(post.id)
+            const comments = await fetchComments(post.id, delay)
             setComments(comments.data.data)
             setLoadingComments(false)
         }

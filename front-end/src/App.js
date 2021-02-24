@@ -20,34 +20,29 @@ function App() {
 
   useEffect(() => {
     setLoading(true)
-    setTimeout(() => {
-      loadData()
-      loadFavorites()
-    }, delay);
+    loadData()
+    loadFavorites()
   }, [delay])
 
   const addToFavorites = (favorite) => {
-    setTimeout(() => {
-      let favoriteLocalStorage = JSON.parse(localStorage.getItem('favorites'))
-      if (favoriteLocalStorage === null) {
-        let favortiteObj = {}
-        favortiteObj[favorite.id] = favorite
-        localStorage.setItem('favorites', JSON.stringify(favortiteObj))
+    let favoriteLocalStorage = JSON.parse(localStorage.getItem('favorites'))
+    if (favoriteLocalStorage === null) {
+      let favortiteObj = {}
+      favortiteObj[favorite.id] = favorite
+      localStorage.setItem('favorites', JSON.stringify(favortiteObj))
+    }
+    else {
+      if (!favoriteLocalStorage.hasOwnProperty(favorite.id)) {
+        favoriteLocalStorage[favorite.id] = favorite
+        localStorage.setItem('favorites', JSON.stringify(favoriteLocalStorage))
+        loadFavorites()
+        notifySuccess('Added to favorites!')
       }
       else {
-        if (!favoriteLocalStorage.hasOwnProperty(favorite.id)) {
-          favoriteLocalStorage[favorite.id] = favorite
-          localStorage.setItem('favorites', JSON.stringify(favoriteLocalStorage))
-          loadFavorites()
-          notifySuccess('Added to favorites!')
-        }
-        else {
-          notifyError('Already in your favorites!')
-        }
+        notifyError('Already in your favorites!')
       }
-    }, delay);
+    }
   }
-
 
   const notifySuccess = (message) =>
     toast.success(message, {
@@ -69,9 +64,6 @@ function App() {
       progress: undefined,
     });
 
-
-
-
   const loadFavorites = () => {
     let favoriteLocalStorage = JSON.parse(localStorage.getItem('favorites'))
     if (favoriteLocalStorage !== null) {
@@ -82,23 +74,18 @@ function App() {
   }
 
   const removeFavorite = (id) => {
-    setTimeout(() => {
-      let favoriteLocalStorage = JSON.parse(localStorage.getItem('favorites'))
-      if (favoriteLocalStorage !== null) {
-
-        delete favoriteLocalStorage[id]
-        localStorage.setItem('favorites', JSON.stringify(favoriteLocalStorage))
-
-        let favoriteArray = Object.values(favoriteLocalStorage)
-        setPosts(favoriteArray)
-      }
-    }, delay);
-
+    let favoriteLocalStorage = JSON.parse(localStorage.getItem('favorites'))
+    if (favoriteLocalStorage !== null) {
+      delete favoriteLocalStorage[id]
+      localStorage.setItem('favorites', JSON.stringify(favoriteLocalStorage))
+      let favoriteArray = Object.values(favoriteLocalStorage)
+      setPosts(favoriteArray)
+    }
   }
 
   const loadData = async () => {
     try {
-      const data = await fetchPosts()
+      const data = await fetchPosts(delay)
       setPosts(data.data.data)
       setimmutablePosts(data.data.data)
       setLoading(false)
@@ -115,20 +102,17 @@ function App() {
     setLoading(true)
     setClickedTag('')
     setPostsFavToggle(false)
-    setTimeout(() => {
-      setLoading(false)
-      setPosts(immutablePosts)
-    }, delay);
+    setLoading(false)
+    setPosts(immutablePosts)
+
   }
 
   const toggleFavorites = () => {
     setLoading(true)
     setClickedTag('')
     setPostsFavToggle(true)
-    setTimeout(() => {
-      setPosts(favorites)
-      setLoading(false)
-    }, delay);
+    setPosts(favorites)
+    setLoading(false)
   }
 
   const tagFuzzySearch = (tag) => {
