@@ -13,3 +13,4 @@ Details
 - Used Jest for unit testing and for Mocked requests for the API.
 - Filtering is done on page so it will work on both the posts and the favorited posts that are stored in local storage.
 - The tags on each post are also clickable and will filter.
+- Clicking add the favorites will store in local storage and clicking delete favorited will remove it
