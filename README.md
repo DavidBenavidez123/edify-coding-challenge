@@ -9,7 +9,7 @@ Running the project
 Details
 - I'm using 2 public api's from https://dummyapi.io/ but there is a call limit of 500 calls a day.
 - One api is to render an array of posts and the other api is to render an array of comments for any specific post.
-- The network delay function will re-render the component when toggeled and only those 2 api's will have a 2 second delay.
+- The network delay function will re-run the function that hits the posts api when toggeled and will then simulate the delay.
 - Used Jest for unit testing and for Mocked requests for the API.
 - Filtering is done on page so it will work on both the posts and the favorited posts that are stored in local storage.
 - The tags on each post are also clickable and will filter.
